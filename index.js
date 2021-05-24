@@ -13,7 +13,7 @@ app.post("/calculate", function (req, res) {
     if (result !== "false") {
       res.status(200).json({ result: result });
     } else {
-      res.status(400).json({ error: "Cannot divide by 0" });
+      sendErrorJSON("Cannot divide by 0" );
     }
   }
 });
@@ -33,9 +33,7 @@ const checkValidRequest = (req, res) => {
             }
           });
           if (!isInteger) {
-            res
-              .status(400)
-              .json({ error: `Non integer value provided at index: ${index}` });
+            sendErrorJSON(`Non integer value provided at index: ${index}`);
           }
           index = [];
           return isInteger;
@@ -49,11 +47,8 @@ const checkValidRequest = (req, res) => {
             }
           });
           if (!isDecimal) {
-            res
-              .status(400)
-              .json({ error: `Non decimal value provided at index: ${index}` });
+            sendErrorJSON(`Non decimal value provided at index: ${index}`);
           }
-
           index = [];
           return isDecimal;
         } else if (req.body.type === "safe") {
@@ -72,23 +67,23 @@ const checkValidRequest = (req, res) => {
             }
           });
           if (isSafe === false) {
-            res.status(400).json({ error: "Number Not Big Enough!" });
+            sendErrorJSON("Number Not Big Enough!");
           }
           return isSafe;
         } else {
-          res.status(400).json({ error: "Unknown type provided" });
+          sendErrorJSON("Unknown type provided");
           return false;
         }
       } else {
-        res.status(400).json({ error: "Cannot operate on 1 value" });
+        sendErrorJSON("Cannot operate on 1 value");
         return false;
       }
     } else {
-      res.status(400).json({ error: "Values not defined properly" });
+      sendErrorJSON("Values not defined properly");
       return false;
     }
   } else {
-    res.status(400).json({ error: "Something broke!" });
+    sendErrorJSON("Something broke!");
     return false;
   }
 };
@@ -175,6 +170,10 @@ function validDenominator(operation, index, element) {
     }
   }
   return isValid;
+}
+
+function sendErrorJSON(string) {
+  res.status(400).json({ error: string });
 }
 
 const port = 3000;
