@@ -26,15 +26,12 @@ const checkValidRequest = (req, res) => {
         if (req.body.type === "integer") {
           let isInteger = true;
           let index = [];
-          let c = -1;
-          numsArray.forEach((element) => {
-            c++;
+          numsArray.forEach((element, i) => {
             if (!Number.isInteger(element)) {
               isInteger = false;
-              index.push(c);
+              index.push(i);
             }
           });
-          c = -1;
           if (!isInteger) {
             res
               .status(400)
@@ -45,12 +42,10 @@ const checkValidRequest = (req, res) => {
         } else if (req.body.type === "decimal") {
           let isDecimal = true;
           let index = [];
-          let c = -1;
-          numsArray.forEach((element) => {
-            c++;
+          numsArray.forEach((element, i) => {
             if (Number.isInteger(element)) {
               isDecimal = false;
-              index.push(c);
+              index.push(i);
             }
           });
           if (!isDecimal) {
@@ -58,7 +53,7 @@ const checkValidRequest = (req, res) => {
               .status(400)
               .json({ error: `Non decimal value provided at index: ${index}` });
           }
-          c = -1;
+
           index = [];
           return isDecimal;
         } else if (req.body.type === "safe") {
